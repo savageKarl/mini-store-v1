@@ -1,6 +1,6 @@
 {
   "name": "@savage181855/mini-store",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "微信小程序全局状态管理器",
   "main": "dist/index.js",
   "miniprogram": "dist",
@@ -25,9 +25,9 @@
     "微信小程序状态管理"
   ],
   "author": {
-    "name" : "savage",
-    "email" : "2443005004@qq.com",
-    "url" : "https://github.com/savage181855/"
+    "name": "savage",
+    "email": "2443005004@qq.com",
+    "url": "https://github.com/savage181855/"
   },
   "repository": {
     "type": "git",
