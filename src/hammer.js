@@ -1,7 +1,7 @@
-import { installEventerCenter } from "./EventCenter.js";
+import { installEventCenter } from "./EventCenter.js";
 import { isObject, hasChanged, deepClone, get } from "./utils";
 
-// defineStore，store.patch
+// 定义一个 useStore，可用于全局使用
 export function defineStore(options) {
   const obj = {
     ...options.state,
@@ -23,7 +23,7 @@ export function defineStore(options) {
       _this.onUnload();
     },
   };
-  installEventerCenter(obj);
+  installEventCenter(obj);
 
   function createGetter() {
     return function get(target, key, receiver) {
@@ -75,6 +75,7 @@ export function defineStore(options) {
    * pageInstance 当前页面实例
    * arrState 需要映射的数据
    * arrActions 需要映射的方法
+   * watch 监听
    */
   return function (pageInstance, arrState = [], arrActions = [], watch = {}) {
     // 调用函数的时候就要注入state，actions和store

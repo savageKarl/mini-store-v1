@@ -101,6 +101,7 @@ export function isObject(value) {
   return value !== null && typeof value === "object";
 }
 
+/** 判断值，使用深比较 */
 export function hasChanged(value, oldValue) {
   return !isSameDeep(value, oldValue);
 }

@@ -112,6 +112,8 @@ export function proxyComponent(globalOptions = {}) {
 /** 全局混入hook */
 function mixinHooks(hooks, newOptions, globalOptions, options) {
   hooks.forEach((name) => {
+
+    // 这里分割的原因是要注入 lifetimes.created 这种 hook
     const paths = name.split(".");
     const len = paths.length;
 

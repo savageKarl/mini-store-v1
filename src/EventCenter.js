@@ -1,4 +1,4 @@
-import { deepClone } from './utils'
+import { deepClone } from "./utils";
 
 const EventCenter = {
   subscribeList: {},
@@ -34,11 +34,10 @@ const EventCenter = {
   },
 };
 
-
-
-export function installEventerCenter(obj) {
+/** 给对象添加发布订阅的事件中心 */
+export function installEventCenter(obj) {
   const cloneObj = deepClone(EventCenter);
-  for (let k in EventCenter) obj[k] = cloneObj[k]
+  for (let k in EventCenter) obj[k] = cloneObj[k];
 }
 
 export default EventCenter;
