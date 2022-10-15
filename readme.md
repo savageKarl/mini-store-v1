@@ -46,8 +46,7 @@ export default useStore;
 
 ```javascript
 // 导入定义的 useStore
-import useStore from "../xxxx/store.js";
-
+import useStore from "../../store/store";
 Page({
   // 注意：这里使用 useStore 即可，可以在this.data.store 访问 store
   useStoreRef: useStore,
@@ -55,13 +54,20 @@ Page({
   mapState: ["count"],
   // 表示想要映射的全局actions，可以直接在当前页面调用 ，例如：this.increment()
   mapActions: ["increment"],
+  watch: {
+    count(oldValue, value) {
+      // 可以访问当前页面的实例 this
+      console.debug(this);
+      console.debug(oldValue, value, "count change");
+    },
+  },
   onIncrement1() {
     // 不推荐
     this.data.store.count++;
   },
   onIncrement2() {
     this.data.store.patch({
-      count: this.data.store.count++,
+      count: this.data.store.count + 1,
     });
   },
   onIncrement3() {
@@ -111,3 +117,47 @@ Page({
   <view>{{count}}</view>
 </view>
 ```
+
+## 全局混入
+
+`app.js`文件
+
+```javascript
+import { proxyPage, proxyComponent } from "@savage181855/mini-store";
+
+// 这里的配置可以跟页面的配置一样，但是有一些规则
+// 'onShow', 'onReady', 'onHide', 'onUnload', 'onPullDownRefresh', 'onReachBottom',
+// 'onPageScroll', 'onResize', 'onTabItemTap'等方法，全局的和页面会合并，其余的方法，页面会覆盖全局的。
+proxyPage({
+  onLoad() {
+    console.debug("global onLoad");
+  },
+  onReady() {
+    console.debug("global onReady");
+  },
+  onShow() {
+    console.debug("global onShow");
+  },
+  onShareAppMessage() {
+    return {
+      title: "我是标题-- 全局",
+    };
+  },
+});
+// 这里的配置可以跟组件的配置一样，但是有一些规则
+// 'created','ready','moved','error','lifetimes.created','lifetimes.ready',
+// 'lifetimes.moved','lifetimes.error','pageLifetimes.show','pageLifetimes.hide',
+// 'pageLifetimes.resize'等方法，全局的和组件会合并，其余的方法，组件会覆盖全局的。
+proxyComponent({
+  lifetimes: {
+    created() {
+      console.debug("global lifetimes.created");
+    },
+  },
+});
+```
+
+## 代码片段
+
+https://developers.weixin.qq.com/s/ZO0SX2mr7xDj
+

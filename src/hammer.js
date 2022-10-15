@@ -1,8 +1,7 @@
 import { installEventerCenter } from "./EventCenter.js";
-import { isObject, hasChanged, deepClone } from './utils';
+import { isObject, hasChanged, deepClone, get } from "./utils";
 
-
-// defineStore，store.patch 
+// defineStore，store.patch
 export function defineStore(options) {
   const obj = {
     ...options.state,
@@ -22,7 +21,7 @@ export function defineStore(options) {
     // 组件无法劫持生命周期自动取消订阅，故提供方法
     cancelUse(_this) {
       _this.onUnload();
-    }
+    },
   };
   installEventerCenter(obj);
 
@@ -42,13 +41,13 @@ export function defineStore(options) {
       const oldStore = deepClone(store);
       const result = Reflect.set(target, key, value, receiver);
 
-      Reflect.ownKeys(store.subscribeList).forEach(key => {
-        const oldValue = oldStore[key];
-        const value = store[key];
+      Reflect.ownKeys(store.subscribeList).forEach((key) => {
+        const oldValue = get(oldStore, key);
+        const value = get(store, key);
         if (hasChanged(oldValue, value)) {
-          store.subscribeList[key].forEach(fn => fn(store[key]));
+          store.subscribeList[key].forEach((fn) => fn(oldValue, value));
         }
-      })
+      });
       return result;
     };
   }
@@ -69,35 +68,44 @@ export function defineStore(options) {
 
   let store = null;
 
-  store = reactive(obj)
+  store = reactive(obj);
 
   /**
-   * 注意：该方法一定要在onLoad里面调用
-   * _this 当前页面的this
+   * 注意：该方法一定要在onLoad或者attached钩子里面调用
+   * pageInstance 当前页面实例
    * arrState 需要映射的数据
    * arrActions 需要映射的方法
    */
-  return function (_this, arrState = [], arrActions = []) {
+  return function (pageInstance, arrState = [], arrActions = [], watch = {}) {
     // 调用函数的时候就要注入state，actions和store
-    arrActions.forEach((fn) => (_this[fn] = store[fn].bind(store)));
-    _this.data.store = store;
+    arrActions.forEach((fn) => (pageInstance[fn] = store[fn].bind(store)));
+    pageInstance.data.store = store;
     const data = {};
     arrState.forEach((key) => (data[key] = store[key]));
-    _this.setData(data)
+    pageInstance.setData(data);
 
-    const callBacks = {};
-    arrState.forEach(key => {
-      callBacks[key] = (value) => { _this.setData({ [key]: value }); }
-      store.subscribe(key, callBacks[key]);
+    const dataCallbacks = {};
+    arrState.forEach((key) => {
+      dataCallbacks[key] = (oldValue, value) => {
+        pageInstance.setData({ [key]: value });
+      };
+      store.subscribe(key, dataCallbacks[key]);
     });
+
+    Reflect.ownKeys(watch).forEach((key) => {
+      store.subscribe(key, watch[key].bind(pageInstance));
+    });
+
     // console.debug(store.subscribeList);
 
-    const _onUnload = _this.onUnload || function () { };
-    _this.onUnload = function () {
+    const _onUnload = pageInstance.onUnload || function () {};
+    pageInstance.onUnload = function () {
       // 装饰onUnload取消订阅，性能优化
       _onUnload();
-
-      Reflect.ownKeys(callBacks).forEach(k => store.remove(k, callBacks[k]));
+      Reflect.ownKeys(dataCallbacks).forEach((k) =>
+        store.remove(k, dataCallbacks[k])
+      );
+      Reflect.ownKeys(watch).forEach((k) => store.remove(k, watch[k]));
     };
 
     return store;
@@ -106,39 +114,37 @@ export function defineStore(options) {
 
 // 单独写兄弟组件传值api是为了关注点分离
 // 只能用于组件通信，除此之外全部用store
-const brotherPassValue = (function () {
-  const obj = {};
-  installEventerCenter(obj);
+// const brotherPassValue = (function () {
+//   const obj = {};
+//   installEventerCenter(obj);
 
-  return {
-    passValue(name, value) {
-      obj.publish(name, value);
-    },
-    receiveValue(_this, name, fn = (val) => val, isMapState = true) {
-      let handle;
-      // 是否映射到data里面
-      if (isMapState) {
-        _this.setData({ [name]: "" });
-        handle = (value) => {
-          _this.setData({ [name]: fn(value) });
-        };
-      } else {
-        handle = (name) => {
-          fn(name);
-        };
-      }
+//   return {
+//     passValue(name, value) {
+//       obj.publish(name, value);
+//     },
+//     receiveValue(_this, name, fn = (val) => val, isMapState = true) {
+//       let handle;
+//       // 是否映射到data里面
+//       if (isMapState) {
+//         _this.setData({ [name]: "" });
+//         handle = (value) => {
+//           _this.setData({ [name]: fn(value) });
+//         };
+//       } else {
+//         handle = (name) => {
+//           fn(name);
+//         };
+//       }
 
-      obj.subscribe(name, handle);
-    },
-    // 组件劫持不了生命周期，无法自动注入，需要手动注入
-    cancelReceive(name) {
-      obj.remove(name);
-    },
-  };
-})();
+//       obj.subscribe(name, handle);
+//     },
+//     // 组件劫持不了生命周期，无法自动注入，需要手动注入
+//     cancelReceive(name) {
+//       obj.remove(name);
+//     },
+//   };
+// })();
 
-const { passValue, receiveValue, cancelReceive } = brotherPassValue;
+// const { passValue, receiveValue, cancelReceive } = brotherPassValue;
 
-export { passValue, receiveValue, cancelReceive };
-
-
+// export { passValue, receiveValue, cancelReceive };

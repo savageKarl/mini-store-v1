@@ -1,11 +1,10 @@
 {
   "name": "@savage181855/mini-store",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "微信小程序全局状态管理器",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "miniprogram": "dist",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c rollup.config.js"
   },
   "keywords": [
