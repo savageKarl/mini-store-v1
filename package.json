@@ -1,15 +1,15 @@
 {
   "name": "@savage181855/mini-store",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "微信小程序全局状态管理器",
   "main": "dist/index.js",
   "miniprogram": "dist",
   "scripts": {
     "build": "rollup -c rollup.config.js"
   },
-  "homepage": "https://github.com/savage181855/-savage181855-mini-store",
+  "homepage": "https://github.com/savage181855/mini-store",
   "bugs": {
-    "url": "https://github.com/savage181855/-savage181855-mini-store",
+    "url": "https://github.com/savage181855/mini-store",
     "email": "2443005004@qq.com"
   },
   "keywords": [
@@ -25,13 +25,13 @@
     "微信小程序状态管理"
   ],
   "author": {
-    "name" : "savage",
-    "email" : "2443005004@qq.com",
-    "url" : "https://github.com/savage181855/"
+    "name": "savage",
+    "email": "2443005004@qq.com",
+    "url": "https://github.com/savage181855/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/savage181855/-savage181855-mini-store"
+    "url": "https://github.com/savage181855/mini-store"
   },
   "license": "GNU GPLv3",
   "devDependencies": {
