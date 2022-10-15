@@ -2,12 +2,18 @@
 
 原生微信小程序全局状态管理工具，轻量，便捷，高性能，响应式。
 
+## 安装
+
+```
+npm i @savage181855/mini-store -S
+```
+
 ## 快速入门
 
 在`app.js`文件调用全局 api，这一步是必须的！！！
 
 ```javascript
-import { proxyPage, proxyComponent } from "./utils/hammer/index";
+import { proxyPage, proxyComponent } from "@savage181855/mini-store";
 
 // 代理页面，让页面可以使用状态管理工具
 proxyPage();
@@ -20,7 +26,7 @@ proxyComponent();
 定义`store.js`文件，模块化管理
 
 ```javascript
-import { defineStore } from "../utils/hammer/hammer";
+import { defineStore } from "@savage181855/mini-store";
 
 const useStore = defineStore({
   state: {
