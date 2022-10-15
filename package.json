@@ -1,0 +1,21 @@
+{
+  "name": "@savage181855/mini-store",
+  "version": "1.0.2",
+  "description": "微信小程序全局状态管理器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mini-store",
+    "store",
+    "miniprograme-store",
+    "mini-redux",
+    "redux-mini",
+    "weixin-store",
+    "小程序状态管理",
+    "微信小程序状态管理"
+  ],
+  "author": "savage",
+  "license": "ISC"
+}
