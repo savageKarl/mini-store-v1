@@ -49,7 +49,7 @@ export function isSameDeep(o1, o2) {
   }
 
   // 这里要判断特殊的构造器类型，并且排除 Object 和 Array
-  const reg = /Null|Function|RegExp|Date|Object|Array/;
+  const reg = /Function|RegExp|Date|Object|Array/;
   const o1String = Object.prototype.toString.call(o1).slice(8, -1);
   const o2String = Object.prototype.toString.call(o2).slice(8, -1);
 
@@ -78,11 +78,28 @@ export function isSameDeep(o1, o2) {
   return true;
 }
 
+/** 浅拷贝，只拷贝第一层数据 */
+export function shallowClone(obj) {
+  if (!obj || typeof obj !== "object") return obj;
+
+  const reg = /Function|RegExp|Date/;
+  if (reg.test(Object.prototype.toString.call(obj))) {
+    return obj;
+  }
+
+  const o = obj.constructor === "Array" ? [] : {};
+  for (let i in obj) {
+    o[i] = obj[i];
+  }
+
+  return o;
+}
+
 /** 深克隆，深克隆主要的点在于，复制Object或Array实例的每一个属性，基本类型和特殊构造器类型*/
 export function deepClone(obj) {
   if (!obj || typeof obj !== "object") return obj;
 
-  const reg = /Null|Function|RegExp|Date/;
+  const reg = /Function|RegExp|Date/;
   if (reg.test(Object.prototype.toString.call(obj))) {
     return obj;
   }
