@@ -49,8 +49,7 @@ export function isSameDeep(o1, o2) {
   }
 
   // 这里要判断特殊的构造器类型，并且排除 Object 和 Array
-  const reg =
-    /Number|Boolean|String|Null|Undefined|Symbol|Function|RegExp|Date/;
+  const reg = /Null|Function|RegExp|Date|Object|Array/;
   const o1String = Object.prototype.toString.call(o1).slice(8, -1);
   const o2String = Object.prototype.toString.call(o2).slice(8, -1);
 
@@ -83,8 +82,7 @@ export function isSameDeep(o1, o2) {
 export function deepClone(obj) {
   if (!obj || typeof obj !== "object") return obj;
 
-  const reg =
-    /Number|Boolean|String|Null|Undefined|Symbol|Function|RegExp|Date/;
+  const reg = /Null|Function|RegExp|Date/;
   if (reg.test(Object.prototype.toString.call(obj))) {
     return obj;
   }
