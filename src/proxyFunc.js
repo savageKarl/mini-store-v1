@@ -67,7 +67,7 @@ export function proxyComponent(globalOptions = {}) {
         if (options.useStoreRef) {
           this.data.store.cancelUse(this);
         }
-        options.detached?.call(this, ...arguments);
+        options?.detached?.call(this, ...arguments);
         globalOptions?.detached?.call(this, ...arguments);
       },
       lifetimes: {
@@ -84,7 +84,7 @@ export function proxyComponent(globalOptions = {}) {
           if (options.useStoreRef) {
             this.data.store.cancelUse(this);
           }
-          options?.lifetimes.detached?.call(this, ...arguments);
+          options?.lifetimes?.detached?.call(this, ...arguments);
           globalOptions?.lifetimes?.detached?.call(this, ...arguments);
         },
       },
