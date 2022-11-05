@@ -8,7 +8,7 @@
 npm i @savage181855/mini-store -S
 ```
 
-## 快速入门
+## 快速使用
 
 在`app.js`文件调用全局 api，这一步是必须的！！！
 
@@ -161,3 +161,47 @@ proxyComponent({
 
 https://developers.weixin.qq.com/s/ZO0SX2mr7xDj
 
+## 注意事项
+
+### 不要在 watch 里面调用 onLoad 
+
+```javascript
+// 导入定义的 useStore
+import useStore from "../../store/store";
+Page({
+  useStoreRef: useStore,
+  mapState: ["count"],
+  watch: {
+    count(oldValue, value) {
+      // 不要这么做，因为会导致 watch多次触发
+      this.onLoad();
+    },
+  },
+  onLoad() {
+    console.debug('page onload')
+  }
+});
+```
+
+### 不要直接在 watch 里面访问从 store 映射的数据
+
+```javascript
+// 导入定义的 useStore
+import useStore from "../../store/store";
+Page({
+  useStoreRef: useStore,
+  mapState: ["count"],
+  watch: {
+    count(oldValue, value) {
+      // 不要这么做，因为 this.data.count 可能还未更新
+      console.debug(this.data.count);
+
+      // 可以这么做，直接访问 this.data.store.count，因为 store是全局统一的，所以更新是最快的
+      console.debug(this.data.store.count)
+    },
+  },
+  onLoad() {
+    console.debug('page onload')
+  }
+});
+```
