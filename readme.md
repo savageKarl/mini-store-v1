@@ -5,7 +5,7 @@
 ## 安装
 
 ```
-npm i @savage181855/mini-store -S
+npm i @savage181855/mini-store@1.0.20 -S
 ```
 
 ## 快速使用
